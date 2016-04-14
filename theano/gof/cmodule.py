@@ -276,7 +276,7 @@ static struct PyModuleDef moduledef = {{
         rval = sio.getvalue()
         # Make sure the hash of the code hasn't changed
         h = hash_from_code(rval)
- 
+
         # Do not test hash code for c_callable funcion
         # It change during compilation
         if not c_callable:
@@ -2178,7 +2178,7 @@ class GCC_compiler(Compiler):
                         include_dirs=None, lib_dirs=None, libs=None,
                         preargs=None, py_module=True, hide_symbols=False,
                         shared=True, code_filename='mod.cpp',
-                        out_filename=None):
+                        out_filename=None, postargs=None):
         """
         The parameters are the same as compile_str
 
@@ -2194,6 +2194,10 @@ class GCC_compiler(Compiler):
             preargs = []
         else:
             preargs = list(preargs)
+        if postargs is None:
+            postargs = []
+        else:
+            postargs = list(postargs)
 
         include_dirs = std_include_dirs() + include_dirs
         libs = std_libs() + libs
@@ -2233,6 +2237,7 @@ class GCC_compiler(Compiler):
         cmd.append(cpp_filename)
         cmd.extend(['-L%s' % ldir for ldir in lib_dirs])
         cmd.extend(['-l%s' % l for l in libs])
+        cmd.extend(postargs)
         return cpp_filename, out_filename, cmd
 
     @staticmethod
@@ -2240,7 +2245,7 @@ class GCC_compiler(Compiler):
                     include_dirs=None, lib_dirs=None, libs=None,
                     preargs=None, py_module=True, hide_symbols=True,
                     shared=True, code_filename='mod.cpp',
-                    out_filename=None):
+                    out_filename=None, postargs=None):
         """
         Parameters
         ----------
@@ -2299,6 +2304,10 @@ class GCC_compiler(Compiler):
             preargs = []
         else:
             preargs = list(preargs)
+        if postargs is None:
+            postargs = []
+        else:
+            postargs = list(postargs)
 
         if shared:
             hide_symbols = False
@@ -2312,7 +2321,7 @@ class GCC_compiler(Compiler):
             hide_symbols,
             shared,
             code_filename,
-            out_filename)
+            out_filename, postargs)
 
         cppfile = open(cpp_filename, 'w')
 

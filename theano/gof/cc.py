@@ -1585,8 +1585,8 @@ class CLinker(link.Linker):
                                 preargs=preargs)[2]))
 
                     # Make the executable link to the shared lib.
-                    preargs.append(os.path.join(location, mod.code_hash + "." +
-                                                cmodule.get_lib_extension()))
+                    postargs = [os.path.join(location, mod.code_hash + "." +
+                                                cmodule.get_lib_extension())]
                     # Make the executable
                     mod_exec.add_header_code(
                         "//command line used to compile the executable: \n" +
@@ -1598,6 +1598,7 @@ class CLinker(link.Linker):
                                 lib_dirs=self.lib_dirs(),
                                 libs=libs,
                                 preargs=preargs,
+                                postargs=postargs,
                                 shared=False, py_module=False,
                                 code_filename='exec.cpp',
                                 out_filename='exec')[2]))
@@ -1613,6 +1614,7 @@ class CLinker(link.Linker):
                         lib_dirs=self.lib_dirs(),
                         libs=libs,
                         preargs=preargs,
+                        postargs=postargs,
                         shared=False, py_module=False,
                         hide_symbols=False,
                         code_filename='exec.cpp',
