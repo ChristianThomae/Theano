@@ -1908,7 +1908,7 @@ class CLinker(link.Linker):
 
  %(struct_name)s *struct_ptr = cinit();
  int run_ret = 0;
- if(struct_ptr){
+ if(struct_ptr) {
    %(shared_load)s
    %(in_init)s
    printf("after cinit()\\n");
@@ -1916,16 +1916,16 @@ class CLinker(link.Linker):
    run_ret = struct_ptr->run();
    printf("run() from the shared library returned=%%d\\n", run_ret);
 
-   if(run_ret==0){
+   if(run_ret==0) {
    %(out_print)s
-   }else if(run_ret != 0){
+   } else if(run_ret != 0) {
      // See out_print to know why we can't call PyObject_Print on win32
-     PyObject *str_err = PyObject_Str(struct_ptr->__ERROR);
+     PyObject * str_err = PyList_GET_ITEM(struct_ptr->__ERROR, 1);
      //PyUnicode_AsUnicode return a ptr to the internal representation.
-     printf("Error: %%s\\n",PyUnicode_AsUnicode(str_err));
+     printf("Error: %%s\\n",PyUnicode_1BYTE_DATA(str_err));
      Py_CLEAR(str_err);
    }
- }else{
+ } else {
    printf("cinit() failed!\\n");
    return 1;
  }
